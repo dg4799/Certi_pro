@@ -1,0 +1,46 @@
+들어갈수 있는 공간 start와 end를 저장 하는 empty_list를 만들고 		     → 입력된 값이 들어갈 start와 end
+	empty_list에 (1, 빈공간크기)를 넣어둠
+-1을 반환할지 체크하는 공간 empty_space에 빈공간 크기를 입력해둠	         → 실패시 -1을 반환 체크하기 위한 빈 사이즈
+그리고 ID의 start, end위치를 넣는 Id_dict를 defaultdict로 만들어둠     	 → 실제 값이 저장하기 위한 dict
+
+
+■ add
+	empty_space에 빈공간이 있는지 체크 	                	→ 추가 실패시 -1로 반환
+	empty_space에 size만큼 값을 뺸다 		            	→ empty_space 업데이트
+	size가 0보다 크면 while로 돌린다 		            	→ 빈공간이 쪼개져 있으면 나눠넣기 위함
+	empty_list에서 start, end값을 뽑는다 		             → 값이 들어가기 위한 start와 end값
+	empty_size를 계산한다				                       → 바로 Id_dict에 집어넣기 위함
+	empty_size(빈공간)가 size보다 같거나 크면 		           → 바로 Id_dict에 집어넣기 위함
+		Id_dict에 추가(ID, (start, end))
+		start에 size +=	 				                    → start값 업데이트
+		start값이 end보다 작으면 empty_list에 빈공간을 추가       → 조각으로 들어갈 수 있는 빈공간임
+		mSize 0 으로 초기화 후 break			                → size를 모두 소모했으므로 0으로 만들어 break
+	empty_size(빈공간)가 size보다 같거나 크지 않으면	            → 한번에 못넣으니까 empty_list의 크기(empty_size)만큼만 넣음
+		빈공간 값만큼 size를 빼고 Id_dict에 추가 	            → 넣을 수 있는 크기(empty_size)만큼만 넣기위함
+	return으로 Id_dict에서 해당 ID의 가장앞서는 주소0번을 반환
+
+■ remove
+    id_dict에 ID의 갯수를 체크                      → remove의 리턴값
+    while로 id_dict에 ID를 True로 실행              → 여러개라면 0이 될때까지 삭제
+        해당 ID의 start와 end를 뽑는다(삭제)
+        삭제된 공간만큼 empty_list에 빈공간을 추가
+        empty_space를 +=로 비워진 크기만큼 업데이트
+    Id_dict에서 해당 ID를 지운다                    → 모두 지워져 값이 없으므로 삭제
+    empty_list를 업데이트한다                       → 값이 지워진 만큼 빈공간 리스트도 업데이트 되어야함
+
+■ update_empty_list                              → empty_list를 인접한 빈공간을 합치기 위함
+    임시 리스르 res를 만든다
+    while로 empty_list가 있는만큼 돌린다
+        empty_list의 start와 end를 뽑는다
+        res의 가장 마지막 공간의 end가 시킨 값이 empty_list의 start와 같으면   → res와 empty_list가 인접할때
+            res의 마지막의 end만 empty_list의 end로 업데이트    → empty_list의 end로 업데이트해서 빈공간 합침
+    return으로 res 반환                                      → 업데이트된 empty_list
+
+■ count
+    count를 0으로 둔다
+    Id_dict의 key를 for문으로 뽑는다
+        해당 key의 start, end값을 for문으로 뽑는다.
+            end값이 입력된 start보다 작거나               → 입력된 start, end보다 범위가 작음
+            start값이 입력된 end값 보다 작으면 continue   → 입력된 start, end보다 범위가 큼
+            아니면 count +1하고                         → 입력된 start, end 범위에 포함됨
+            break                                     → 해당 key값이 중복으로 count 안되게 break

@@ -1,0 +1,19 @@
+□ 문제 해석
+ - init
+  1. mAncestor : 선조 미생물 이름
+  2. mLastday : 선조의 마지막 생존일
+
+ - add
+  1. mName : 새로운 미생물 이름
+  2. mParent : 부모 미생물 이름
+  3. mFirstday : 생존 기간 시작
+  4. mLastday : 생존 마지막 기간
+  * 추가된 미생물의 선조와의 거리를 반환
+
+ - distance
+  1. mName1, mName2 : mName1 미생물과 mName2 미생물
+  * 두 미생물간의 가계도 거리를 반환
+
+ - count
+  1. mDay : 생존기간
+  * 지금까지 기록된 미생물 중 생존기간 mDay에 포함되는 개체 수 반환

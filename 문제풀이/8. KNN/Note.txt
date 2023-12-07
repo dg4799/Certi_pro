@@ -1,0 +1,23 @@
+□ 문제 해석
+1. 특정 지점에서 근처의 포인트를 체크해서 분류해야하는 문제로 sqrt decomp를 이용해서 이상치 이상의 블록은 제외하고
+   이상치 이내의 블럭만 체크해야함
+2. 최근접이웃 K 값에 따라 color의 종류가 많으면 해당 color를 return 해주는 문제임.
+
+□ 문제 풀이
+1. addSample
+  - (mX, mY)를 이상치 한계값 l로 나눈 몫을 블록으로 하여 (nX, nY)의 hash를 만든다. --> nX = mX//l, nY = mY//l
+  - hash에는 mX, mY, mC, mID의 모든 정보를 포함시킴
+  - delete를 위해 del hash를 만들어 del[mID] = (nX, nY)의 정보를 기록
+
+2. deleteSample
+  - mID를 받아 del hash에서 (nX, nY)를 찾고 (nX, nY)에서 해당 mID를 체크하여 같으면 remove
+  - 그리고 del에서 mID는 삭제 (del)
+
+3. predict
+  - 특정점 pX, pY의 위치를 받아 nX, nY의 범위를 계산하고 주위 9방향 dy = [-1, 0, 1], dx = [-1, 0, 1]를
+    이중 for 문을 돌며 dist를 계산함.
+    dist가 l보다 크면 무시하고 아니면 heap에 저장함
+  - heap에 저장된 값이 없으면 -1을 반환
+  - heap을 pop으로 하나씩 뽑아서 color별 갯수를 체크하기위해 color 리스트의 인덱스에 color 값을 카운트
+    (heappop으로 dist를 우선으로 두면 범주의 개수가 같으면 dist가 가장 작은값을 가지는 범주로 추정)
+  - 카운트된 값중 가장 많은것의 인덱스를 return

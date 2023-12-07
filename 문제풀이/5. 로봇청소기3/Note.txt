@@ -1,0 +1,27 @@
+□ 문제 해석
+ - init(int N, int subTaskCount)
+   1. 평면의 크기 N*N
+   2. subTaskCount : cleanHouse가 호출되는 횟수
+ - cleanHouse(int mLimitMoveCount)
+   1. 로봇 위치 방향값 랜덤
+   2. 시작위치 청소됨
+   3. moveRobot() 함수를 mLimitMoveCount를 초과하여 호출할 수 없음.
+     - mLimitMoveCount : 로봇의 최대 이동 횟수
+ - scanFromRobot(int floorState[3][3])
+   1. 이 함수를 호출하면 로봇이 scan한 주변 정보를 floorState에 저장하여 반환
+     - 0 : 바닥, 1 : 벽
+     - 현재위치에서 9개의 바닥을 체크하고 로봇의 방향에 맞게 돌리는 함수 필요!
+     * 각 로봇 위치와 진행방향을 기준으로 한 3*3 floorstate return
+ - moveRobot(int mCommand)
+   1. mCommand는 4가지 명령
+     - 0 : 현재 진행방향으로 1칸 전진
+     - 1 : 현재 진행방향에서 왼쪽으로 90도 회전 후 1칸 전진
+     - 2 : 현재 진행방향에서 뒤로 회전 후 1칸 전진
+     - 3 : 현재 진행방향에서 오른쪽으로 90도 회전 후 1칸 전진
+   - 각 mCommand를 반영하는 함수 필요!
+   - mCommand 후 해당 위치가 벽이 아닌지 check해서 return
+
+
+
+□ 문제풀이
+1. scanFromRobot에서 3*3의 floorState와 방향값이 주어짐

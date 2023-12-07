@@ -1,0 +1,54 @@
+빈공간 체크하는 empty_space 생성
+빈공간의 리스트를 저장하는 empty_list 생성
+값을 저장하는 ID_dict
+
+□ add
+	empty_size보다 size가 크면 -1반환 체크
+		empty_space에 size를 빼어 업데이트
+
+	size가 0보다 클때만 도는 while로
+		empty_list의 start, end를 꺼내서
+		empty_size를 계산
+		empty_size가 size 보다 크거나 같으면
+			ID_dict에 id, start, end를 추가
+			start에 size만큼 키워서
+			start가 end보다 작거나 같으면
+				empty_list에 start와 end를 추가함
+			size를 0으로 초기화하고
+			while break
+		empty_size가 size 보다 크거나 같지 않으면
+			size에 empty_size만큼 빼고
+			ID_dict에 id, start, end를 추가
+	return id_dict의 첫번쨰값의 start를 반환
+
+□ remove
+	count 변수로 id_dict[id]의 갯수를 세어 저장
+	while을 돌려서
+		id_dict에서 해당 id를 pop으로 뽑고
+		그 id의 start와 end를 empty_list에 추가하고
+		empty_space를 업데이트하고
+	해당 id는 삭제하고
+	empty_list의 인접값을 체크하는 update를 돌려 합치고
+	return count
+
+
+□ update
+	임시 리스트를 만들고
+	while로 empty_list의 start, end를 뽑아서
+		임시리스트의 마지막의 end + 1이 start와 같으면
+			임시리스트 마지막의 end를 empty_list end로 업데이트
+		임시리스트의 마지막의 end + 1이 start와 다르면
+			임시리스트에 추가
+	return 임시리스트
+
+□ count
+	count = 0을 만듬
+	id_dict의 id를 for문으로 뽑아서
+		id의 start, end를 for문으로 뽑고
+			입력된 start보다 end가 작거나 or 입력된 end보다 start가 크면
+				continue
+			아니면
+				count += 1하고 break
+	return count
+
+
