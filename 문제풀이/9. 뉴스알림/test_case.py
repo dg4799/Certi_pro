@@ -1,5 +1,6 @@
 import sys
-from solution_1 import init, registerUser, offerNews, cancelNews, checkUser
+# from solution_1 import init, registerUser, offerNews, cancelNews, checkUser
+from solution_self import init, registerUser, offerNews, cancelNews, checkUser
 
 CMD_INIT = 0
 CMD_REGI = 1
@@ -63,10 +64,16 @@ def run():
 
 
 if __name__ == '__main__':
+    import time
     sys.stdin = open('sample_input.txt', 'r')
     inputarray = input().split()
     TC = int(inputarray[0])
     MARK = int(inputarray[1])
+
+    start = time.time()
     for testcase in range(1, TC + 1):
         score = MARK if run() else 0
         print("#%d %d" % (testcase, score), flush=True)
+    end = time.time()
+
+    print(end-start)

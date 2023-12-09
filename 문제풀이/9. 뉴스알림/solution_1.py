@@ -15,13 +15,19 @@ import heapq as hq
 global user_news, channels, update_list, deleted_news
 
 
-def update(mTime):  # 업데이트 함수 너무 최고다, 언제 불릴지 잘 판단하기
-    while update_list and update_list[0][0] <= mTime:
+def update(mTime):
+    # registerUser와 checkUser시에 업데이트 함수 부르기 (이거 계속 확인해보기.....)
+    # heap인 update_list에 mTime에 육박한 리스트가 있으면 update 시작 (인덱스 에러를 피하기 위해 update_list가 0개가 아닐때 병행조건)
+    while len(update_list) != 0 and update_list[0][0] <= mTime:
 
+        # update_list에서 가장 빠른 mTime 작업을 pop으로 뽑아옴
         min_time, mNewsID, channel_id = hq.heappop(update_list)
+        # 해당 뉴스가 mNewsID에 있으면 무시
         if mNewsID in deleted_news: continue
 
+        # 해당 채널의 구독자를 뽑아서
         for user in channels[channel_id]:  # 구독자가 없는 채널은 없음
+            # 유저의 뉴스알림 리스트에 뉴스 추가
             user_news[user].append(mNewsID)
 
 
@@ -34,34 +40,43 @@ def init(N, K):
 
 
 def registerUser(mTime, mUID, mNum, mGroupIDs):
-    update(mTime)  # heap에 저장되어 있는 알림들 user에게 업데이트 --> 업데이트 되고 user가 채널 목록에 들어가야 하기 때문
-    # mtime+mdealy에 추가되는 유저는 어차피 그 시간 뉴스 못 받음
+    # mTime 시각에 유저에게 보내지는 뉴스 알림이 있는 경우 먼저 알림을 보내기 위한 update
+    update(mTime)
 
-    for channel_id in mGroupIDs[:mNum]:  # argument로 주어지는 놈들 인덱스 딱 안 맞을 수도 있음, print 찍어보거나 main 보기 (섬지키기와 동일)
+    # mGroupIDs를 받아서 뉴스채널에 유저를 등록한다.
+    for channel_id in mGroupIDs[:mNum]:
+        # channels 리스트에 있으면 리스트에 mUID append
         if channel_id in channels:
             channels[channel_id].append(mUID)
+        # channles 리스트에 없으면 channels[GroupID] = [mUID] 저장, 같은 채널에 mUID가 여러개 들어올 수 있어서 []로 저장함
         else:
-            channels[channel_id] = [mUID]  ### channel id에 굳이 news_id들도 가지고 있을 필요 있나? --> 필요 없음
-    return None
-
+            channels[channel_id] = [mUID]
+    return
 
 def offerNews(mTime, mNewsID, mDelay, mGroupID):
+    # update_list에 정보를 넣고 시간대별로 update해서 반영
     hq.heappush(update_list, (mTime + mDelay, mNewsID, mGroupID))
     return len(channels[mGroupID])
 
 
 def cancelNews(mTime, mNewsID):
+    # cancle 뉴스를 받아서 delete_news에 추가 (향후 checkUser에서 삭제된 뉴스 알림은 제외하기 위함)
+    # mNewsID는 중복으로 주어지지 않아서 모두 넣고 체크하면 됨.
     deleted_news.add(mNewsID)
     return
 
 
 def checkUser(mTime, mUID, mRetIDs):
+    # mTime 시각에 유저에게 보내지는 뉴스 알림이 있는 경우 먼저 알림을 보내기 위한 update
     update(mTime)
 
-    k = 0
+    count = 0
     while user_news[mUID]:
-        news_id = user_news[mUID].pop(-1)
+        # 유저의 알림을 받는 뉴스를 꺼내서
+        news_id = user_news[mUID].pop()
+        # 해당 뉴스가 cancle 뉴스에 포함되어 있으면 무시 (뉴스id는 중복되지 않기 때문)
         if news_id in deleted_news: continue
-        if k <= 2: mRetIDs[k] = news_id
-        k += 1
-    return k
+        # cancle 뉴스에 포함되어있지 않다면 받은 뉴스 ID를 최신순서대로 저장 (최대 3개까지만 넣기위해 count를 넣음)
+        if count <= 2: mRetIDs[count] = news_id
+        count += 1
+    return count
