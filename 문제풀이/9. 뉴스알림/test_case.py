@@ -1,5 +1,5 @@
 import sys
-from solution_self import init, registerUser, offerNews, cancelNews, checkUser
+from solution_1 import init, registerUser, offerNews, cancelNews, checkUser
 
 CMD_INIT = 0
 CMD_REGI = 1
