@@ -1,6 +1,6 @@
 import sys
 
-from solution import init, add, remove, status
+from solution_1 import init, add, remove, status
 
 CMD_INIT = 1
 CMD_ADD = 2
