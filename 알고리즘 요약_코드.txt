@@ -1,29 +1,35 @@
 ⬜ sqrt 구간합
-      - while left <= right (right까지만 더함) and left%제곱근 (나누어졌을때 몫이 0이되어 구간에 도달)
-            left += 1 (제곱근에 도달할때까지 +)
-            res += 숫자
-      - while left <= right (left까지만 더함) and right+1%제곱근 (여기서 right+1은 321까지 더하는 것임)
-            right -=1
-            res += 숫자
-      - while left <= right (left에 +제곱근을 하는데 right를 초과하면 구간이 넘어가므로 탈출)
-            res += sqrt_time[left//sqrt] (구간합)
-            left += sqrt (left에 제곱근을 더해 다음 구간을 계산)
+  1. 구간의 좌측값 더하기
+    - while left <= right (right까지만 더함) and left%제곱근 (나누어졌을때 몫이 0이되어 구간에 도달)
+           left += 1 (제곱근에 도달할때까지 +)
+           res += 숫자
+  2. 구간의 우측값 더하기
+    - while left <= right (left까지만 더함) and right+1%제곱근 (여기서 right+1은 321까지 더하는 것임)
+           right -=1
+           res += 숫자
+  3. 구간값 더하기
+    - while left <= right (left에 +제곱근을 하는데 right를 초과하면 구간이 넘어가므로 탈출)
+           res += sqrt_time[left//sqrt] (구간합)
+           left += sqrt (left에 제곱근을 더해 다음 구간을 계산)
 
-⬜ sqrt 2차원 구간합 또는 구간체크
-  - nX = mX // l, nY = mY // l --> (nX, nY) 구간 생성
-  - hash[(nX, nY)].append(mX, mY, mID, ...) --> 해당구간에 데이터 저장
-  - pX = mX // l, pY = mY // l --> (pX, pY) 특정지점 구간 확인
-  - dx = [0, 1, -1], dy = [0, 1, -1] for문을 돌려 (pX, pY) 근처 구간만 데이터 확인
+⬜ sqrt 2차원 구간합
+  1. 입력값(mX, mY)의 구간 생성 및 데이터 저장
+    - nX = mX // l, nY = mY // l --> (nX, nY) 구간 생성
+    - hash[(nX, nY)].append(mX, mY, mID, ...) --> 해당구간에 데이터 저장
+  2. 특정지점의 구간 확인 및 주변 구간 체크
+    - pX = mX // l, pY = mY // l --> (pX, pY) 특정지점 구간 확인
+    - dx = [0, 1, -1], dy = [0, 1, -1] for문을 돌려 (pX, pY) 근처 구간만 데이터 확인
 
 ⬜ Dijkstra
-  - hash[mid]=(next_mid, dist), hash[next_mid]=(mid, dist) --> mid에서 next_mid까지 비용을 서로 저장
-  - 무한배열 cost[INF, INF..] 생성
-  - start 인덱스의 비용을 0으로 잡고(cost[0] = 0) q에 넣고 while 시작(heappush(q, (0, start))
-  - q에서 값을 빼내어(dist, now = heappop(q)) hash[now]에서 값을 빼옴 (next_mid, dist)
-  - start dist + next_mid dist = cost, cost가 cost[next_mid]보다 낮으면  --> cost[next_mid]를 cost로 갱신
-  - 다시 q에 현재의 cost와 next_mid를 넣는다 --> heappush(q, (cost, next_mid))
-  - 연결되어 있는 mid를 찾아 들어가서 비용갱신을 반복하여 최저값 비용 찾음, 연결 안되어있는 지점들은 INF로 남음
-
+  ★ 연결되어 있는 mid를 찾아 들어가서 비용갱신을 반복하여 최저값 비용 찾음, 연결 안되어있는 지점들은 INF로 남음
+  1. 서로간 거리(비용) 저장
+    - dist_list[mid]=(next_mid, dist), dist_list[next_mid]=(mid, dist)
+  2. 배열을 만들고 cost를 계산하여 최저비용을 갱신
+    - cost_list[INF, INF..] 생성
+    - q에 넣고 while 시작(heappush(q, (0, start))  --> start 인덱스의 비용을 0으로 잡음
+    - q에서 pop(0, start) / 연결된 mid의 값을 가져옴 : dist_list[start] = (next_mid, dist)
+    - cost = cost(q에서 꺼냄) + dist(연결된 mid) -> cost < cost_list[next_mid] --> cost[next_mid] = cost로 갱신
+    - 다시 q에 현재의 cost와 next_mid를 push --> heappush(q, (cost, next_mid))
 
 
 ⬜ LCA (최소 공통 조상)
@@ -45,8 +51,7 @@
   - 조별경기 과제에서 Union find를 활용하여 각 노드의 최종값을 계산함
     0. node 수만큼 parent[0, 1, ... N] 생성 (초기엔 연결없이 독립적)
     1. 부모노드 찾기 find_root()
-      - while로 node == parent[node]라면 node는 최상위 노드 찾고 return node
-                아니라면 node = parents[node]해서 부모노드를 node에 넣고 다시 while --> 이렇게하면 연결되어있는 최상위 노드까지 찾음
+      - while로 node == parent[node]라면 node는 최상위 노드 찾고 return node, 아니라면 node = parents[node]해서 부모노드를 node에 넣고 다시 while
     2. Union(합치기, 큰번호의 부모를 작은번호로 연결)
       - a, b의 최상위노드를 찾음
       - a, b중 작은 번호의 노드를 큰 번호의 노드에 부모노드로 넣음 -> a < b라면 parents[b] = a
@@ -59,10 +64,10 @@
 
 
 ⬜ 타임라인이 있는 문제
-  - update 함수를 만들어 해당 타임에 속하는 액션들을 처리함, 액션들은 heap으로 push해서 순서대로 넣기
-    1. 액션들을 time 순으로 heappush
-    2. update 함수에서 heappop으로 가장 오래된 것부터 뽑아서 액션(순서대로 액션을 취하기 위함)
-  - input의 데이터가 고유하다면 delete 리스트에 넣어 추후 if로 걸러내기만 해도 됌.
+  1 update 함수를 만들어 해당 타임에 속하는 액션들을 처리함, 액션들은 heap으로 push해서 순서대로 넣기
+    - 액션들을 time 순으로 heappush
+    - update 함수에서 heappop으로 가장 오래된 것부터 뽑아서 액션(순서대로 액션을 취하기 위함)
+  2. input의 데이터가 고유하다면 delete 리스트에 넣어 추후 if로 걸러내기만 해도 됌.
 
 ⬜ 종속성이 있는 문제
   - 종속된 관계가 있다면 부모리스트에 자식을 리스트형태로 저장하여 꺼내어 쓰며 풀어감
