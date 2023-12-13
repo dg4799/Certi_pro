@@ -1,5 +1,5 @@
 import sys
-from solution_self_2 import init, destroy, update, updateByType, calculate
+from solution_1213 import init, destroy, update, updateByType, calculate
 import time
 
 MAX_N = 100000
@@ -17,6 +17,8 @@ def run():
     isOK = 0
     C = int(sys.stdin.readline())
     for c in range(C):
+        if c == 630:
+            print('check')
         inputs = iter(sys.stdin.readline().split())
         cmd = int(next(inputs))
         if cmd == CMD_INIT:
@@ -47,6 +49,8 @@ def run():
         else:
             isOK = 0
     destroy()
+    # if isOK == 0:
+    #     print(i)
     return isOK
 
 

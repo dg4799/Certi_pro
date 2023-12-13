@@ -1,16 +1,20 @@
+⬜ 파일 저장소
+  1. empty_size로 저장 가능 공간 체크
+  2. while empty_size: heappop(empty_size)로 파일 쪼개서(mSize -= 현재공간) 저장시키기
+  (★오답) remove시 빈공간 가운데 조각이 삭제되면 구간 연결 필요 --> q에서 빈공간(start, end)을 pop, res[-1][1]이 start와 같으면 res값 변경
+
+
 ⬜ sqrt 구간합
-  1. 구간의 좌측값 더하기
-    - while left <= right (right까지만 더함) and left%제곱근 (나누어졌을때 몫이 0이되어 구간에 도달)
+  1. sqrt에 도달할때까지 구간 좌측값 더하기, 구간 우측값 더하기 / 구간값 더하기
+    - 좌측값 : while left <= right and left%sqrt        # 0~319 더하기
            left += 1 (제곱근에 도달할때까지 +)
-           res += 숫자
-  2. 구간의 우측값 더하기
-    - while left <= right (left까지만 더함) and right+1%제곱근 (여기서 right+1은 321까지 더하는 것임)
+    - 우측값 : while left <= right and (right+1)%sqrt   # 640~320 더하기
            right -=1
-           res += 숫자
-  3. 구간값 더하기
-    - while left <= right (left에 +제곱근을 하는데 right를 초과하면 구간이 넘어가므로 탈출)
-           res += sqrt_time[left//sqrt] (구간합)
-           left += sqrt (left에 제곱근을 더해 다음 구간을 계산)
+    - 구간값 : while left <= right
+           res += sqrt_time[left//sqrt]
+           left += sqrt
+  (★오답) mA가 mB보다 큰경우(반대로 가는경우 mA, mB만 바꿈(left, right 지정은 이후에)) --> mA, mB = mB, mA / left = mA, right = mB
+  (★오답) 3~4구간의 구간합은 3번 구간만 더해야 하므로 right-1
 
 ⬜ sqrt 2차원 구간합
   1. 입력값(mX, mY)의 구간 생성 및 데이터 저장
@@ -84,3 +88,4 @@
     1. dx, dy의 [북, 서, 남, 동] 형태로 만듬
     2. dx, dy의 인덱스를 보고 다음 인덱스를 찾는 공식 : nd = (direction + 3) % 4
     3. dfs로 nd로 회전하며 체크하고 방문이 안되면 재귀가 끝나고 현재 회전방향(direction)에 nd를 저장
+
