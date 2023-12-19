@@ -1,5 +1,5 @@
 import sys
-from solution_self import init, add, distance, count
+from solution_1213 import init, add, distance, count
 
 CMD_INIT = 100
 CMD_ADD = 200

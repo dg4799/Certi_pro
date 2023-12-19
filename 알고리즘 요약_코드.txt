@@ -3,8 +3,7 @@
   2. while empty_size: heappop(empty_size)로 파일 쪼개서(mSize -= 현재공간) 저장시키기
   (★오답) remove시 빈공간 가운데 조각이 삭제되면 구간 연결 필요 --> q에서 빈공간(start, end)을 pop, res[-1][1]이 start와 같으면 res값 변경
 
-
-⬜ sqrt 구간합
+⬜ 출근길 라디오(sqrt 구간합)
   1. sqrt에 도달할때까지 구간 좌측값 더하기, 구간 우측값 더하기 / 구간값 더하기
     - 좌측값 : while left <= right and left%sqrt        # 0~319 더하기
            left += 1 (제곱근에 도달할때까지 +)
@@ -16,15 +15,7 @@
   (★오답) mA가 mB보다 큰경우(반대로 가는경우 mA, mB만 바꿈(left, right 지정은 이후에)) --> mA, mB = mB, mA / left = mA, right = mB
   (★오답) 3~4구간의 구간합은 3번 구간만 더해야 하므로 right-1
 
-⬜ sqrt 2차원 구간합
-  1. 입력값(mX, mY)의 구간 생성 및 데이터 저장
-    - nX = mX // l, nY = mY // l --> (nX, nY) 구간 생성
-    - hash[(nX, nY)].append(mX, mY, mID, ...) --> 해당구간에 데이터 저장
-  2. 특정지점의 구간 확인 및 주변 구간 체크
-    - pX = mX // l, pY = mY // l --> (pX, pY) 특정지점 구간 확인
-    - dx = [0, 1, -1], dy = [0, 1, -1] for문을 돌려 (pX, pY) 근처 구간만 데이터 확인
-
-⬜ Dijkstra
+⬜ 전기차대여소(bfs, Dijkstra)
   ★ 연결되어 있는 mid를 찾아 들어가서 비용갱신을 반복하여 최저값 비용 찾음, 연결 안되어있는 지점들은 INF로 남음
   1. 서로간 거리(비용) 저장
     - dist_list[mid]=(next_mid, dist), dist_list[next_mid]=(mid, dist)
@@ -34,24 +25,47 @@
     - q에서 pop(0, start) / 연결된 mid의 값을 가져옴 : dist_list[start] = (next_mid, dist)
     - cost = cost(q에서 꺼냄) + dist(연결된 mid) -> cost < cost_list[next_mid] --> cost[next_mid] = cost로 갱신
     - 다시 q에 현재의 cost와 next_mid를 push --> heappush(q, (cost, next_mid))
+  (★오답) charger에 거리값을 append 할때 c_count가 다른 로직에서 -= 1이 반영되어 값이 이상하게 들어가는 경우가 있었음
+         -=1/+=1은 값이 지속적으로 감소/증가 하는 경우만 사용하고 아닌 경우 값에 바로 -1 or +1을 바로 넣을것.
+
+⬜ 전자게시판(종속성)
+  - 종속된 관계가 있다면 부모리스트에 자식을 리스트형태로 저장하여 꺼내어 쓰며 풀어감
+  (★오답) list[mID]에 값을 넣을때 [mUser, mID, ....] 형태로 값을 넣어야 나중에 인덱스에 접근해서 값을 += 할 수 있음!!
+  (★오답) bestUser와 bestMessage에 값을 넣을때부터 -를 넣어서 자동정렬 가능하게 할 것!
+  (★오답) comment에서 recomment가 삭제되는 경우가 있는데 remove를 안해줘서 일부 케이스에서 실패함!
 
 
-⬜ LCA (최소 공통 조상)
+⬜ 미생물 가계도(LCA:최소 공통 조상)
   ★ 노드의 이름에 인덱스 번호를 부여!!! parent 리스트와 depth 리스트를 해당 인덱스에 값을 넣고 꺼내쓴다!
   1. node add
     - idx += 1, info_name[node_name] = idx                   --> 노드를 입력받으면 인덱스 번호를 부여하고 리스트에 저장
-    - parent_list.append(info_name[parent_node_name])        --> parent 리스트에 부모노드의 인덱스를 append (parent 리스트에 부모노드 번호를 기록)
-    - depth.append(depth[info_name[parent_node_name]]+1)     --> depth 리스트에 부모깊이에 +1을 더해 기록
+    - parent_list.append(info_name[parent_name])        --> parent 리스트에 부모노드의 인덱스를 append (parent 리스트에 부모노드 번호를 기록)
+    - depth.append(depth[info_name[parent_name]]+1)     --> depth 리스트에 부모깊이에 +1을 더해 기록
   2. LCA 찾기
     - 두개의 노드를 입력받으면 인덱스번호를 info_name[node_name]으로 찾는다.
     - index_1과 index_2의 깊이를 비교하고 index_2의 깊이가 낮으면 index_2의 깊이를 더 깊게 한다 (깊이 맞추기에서 index_2만 조정하기 위함)
       - index_1, index_2 = index_2, index_1
-    - while로 index_1과 index_2의 깊이를 맞춘다
-      - index_1보다 index_2가 깊으면 -> index_2 = parent_list[index_2], res += 1 -->index_2의 부모를 찾아 index_2에 부모 인덱스를 저장하고 거리값 +1
-      - index_1과 index_2의 깊이가 같으면 -> index_1과 index_2가 같은 조상인지 체크하고 아니라면 각각 부모로 한칸 이동 및 거리값 +1씩
+    - index_1과 index_2의 깊이를 맞춘다
+      - while로 index_1보다 index_2가 깊으면 -> index_2 = parent_list[index_2], res += 1 -->index_2의 부모를 찾아 index_2에 부모 인덱스를 저장하고 거리값 +1
+      - wilhe로 index_1과 index_2의 깊이가 같으면 -> index_1과 index_2가 같은 조상인지 체크하고 아니라면 각각 부모로 한칸 이동 및 거리값 +1씩
     - 최종 거리값을 return --> 두 노드의 같은 조상까지 거리
+  (★오답) bisect 값 넣을때는 insort 사용! / birth = bisect_right로 birth에 포함되는 갯수 확인, die = biect_left로 die에 포함 안되는 것 확인, 둘의 차를 구하면 count
 
-⬜ Union find (합집합 찾기 : 조합해서 계산)
+
+⬜ KNN, 감시탑(sqrt 2차원 구간합)
+  1. 입력값(mX, mY)의 구간 생성 및 데이터 저장
+    - nX = mX // l, nY = mY // l --> (nX, nY) 구간 생성
+    - hash[(nX, nY)].append(mX, mY, mID, ...) --> 해당구간에 데이터 저장
+  2. 특정지점의 구간 확인 및 주변 구간 체크
+    - pX = mX // l, pY = mY // l --> (pX, pY) 특정지점 구간 확인
+    - dx = [0, 1, -1], dy = [0, 1, -1] for문을 돌려 (pX, pY) 근처 구간만 데이터 확인
+  (★오답) 문제에서 x축 위치가 더 작은것 우선, x축 위치가 같으면 y축 위치가 더 작은것 우선.....
+  (★오답) MaxValue로 mC_list를 체크할때 MaxValue에 index 번호를 저장하면 계산 오류
+  (★오답) distance_list를 push 할때 이미 l 이하값만 push 하고 리스트 개수가 0이면 return -1 (시간줄이기)
+  (★오답) del 리스트에 추가해서 continue로 거르는것 보다 del로 sqrt_list에서 찾아서 remove 해주기 (시간줄이기)
+
+
+⬜ 조별경기(Union find:조합 계산)
   - 조별경기 과제에서 Union find를 활용하여 각 노드의 최종값을 계산함
     0. node 수만큼 parent[0, 1, ... N] 생성 (초기엔 연결없이 독립적)
     1. 부모노드 찾기 find_root()
@@ -67,23 +81,23 @@
 
 
 
-⬜ 타임라인이 있는 문제
+⬜ 뉴스알림(타임라인)
   1 update 함수를 만들어 해당 타임에 속하는 액션들을 처리함, 액션들은 heap으로 push해서 순서대로 넣기
     - 액션들을 time 순으로 heappush
     - update 함수에서 heappop으로 가장 오래된 것부터 뽑아서 액션(순서대로 액션을 취하기 위함)
   2. input의 데이터가 고유하다면 delete 리스트에 넣어 추후 if로 걸러내기만 해도 됌.
+  (★오답) update while 돌릴때 pop으로 먼저 뽑지말고 [0][0]이 mTime보다 작은지 체크
+  (★오답) allTime, mNews 순으로 heappop을 update_list에 했기때문에 같은시간대에 mNews가 항상 뒤에 위치함
 
-⬜ 종속성이 있는 문제
-  - 종속된 관계가 있다면 부모리스트에 자식을 리스트형태로 저장하여 꺼내어 쓰며 풀어감
 
-⬜ 블럭게임
+⬜ 블럭제거게임(타임라인, 겹침체크)
   - 타임라인이 있는 문제로 update 함수 필요, 추가되는 항목들을 heap으로 push해서 하나씩 꺼내서 처리함
   - (블록 생성시간 + 행의 수) <= 현재시간 --> 블록리스트에서 제거 및 카운트 업데이트
   - 바닥과 가장 가까운 블럭을 제거하는 지문이지만 실제 그림에선 겹치는 블럭만 남기면 해결!
     1. 겹침을 체크하는 열의 수만큼의 체크 리스트 생성
     2. 블럭을 pop으로 꺼내서 시작칸부터 끝나는칸까지 for문으로 돌며 칸이 겹치면 임시 블록리스트에 넣기
 
-⬜ 로봇청소기
+⬜ 로봇청소기(bfs, 회전)
   - 현재 direction에서 반시계 90도 회전
     1. dx, dy의 [북, 서, 남, 동] 형태로 만듬
     2. dx, dy의 인덱스를 보고 다음 인덱스를 찾는 공식 : nd = (direction + 3) % 4

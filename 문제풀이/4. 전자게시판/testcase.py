@@ -1,5 +1,5 @@
 import sys
-from solution_self import init, writeMessage, commentTo, erase, getBestMessages, getBestUsers
+from solution_1213 import init, writeMessage, commentTo, erase, getBestMessages, getBestUsers
 # from solution_2 import init, writeMessage, commentTo, erase, getBestMessages, getBestUsers
 
 CMD_INIT = 100
@@ -18,6 +18,10 @@ def run():
     mBestMessageList = [0 for _ in range(5)]
 
     for q in range(Q):
+
+        if tc == 7 and q == 81:
+            print("check")
+
         input_iter = iter(input().split())
         cmd = int(next(input_iter))
         if cmd == CMD_INIT:
@@ -60,6 +64,9 @@ def run():
                     okay = False
         else:
             okay = False
+
+        # if okay == False:
+        #     print("check")
     return okay
 
 
